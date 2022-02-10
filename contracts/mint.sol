@@ -4,7 +4,7 @@ pragma solidity ^0.8.3;
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract mint is AccessControl
+contract Mint is AccessControl
 {
     /**
      * Signer.
@@ -59,6 +59,8 @@ contract mint is AccessControl
     {
         // assign contract creator to _signer.
         _signer = _msgSender();
+        // give contract creator admin role.
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
     /**
