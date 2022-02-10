@@ -36,14 +36,10 @@ module.exports = {
     rinkeby: {
       url: process.env.RINKEBY_RPC_URL || '',
       accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
-      contract_address: process.env.RINKEBY_CONTRACT_ADDRESS || '',
-      airdrop_address: process.env.RINKEBY_AIRDROP_ADDRESS || '',
     },
     mainnet: {
       url: process.env.MAINNET_RPC_URL || '',
       accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
-      contract_address: process.env.MAINNET_CONTRACT_ADDRESS || '',
-      airdrop_address: process.env.MAINNET_AIRDROP_ADDRESS || '',
     },
   },
   etherscan: {

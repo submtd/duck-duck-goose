@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.3;
 
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 contract Mint is AccessControl
 {
@@ -28,9 +28,14 @@ contract Mint is AccessControl
     uint256 public mintVersion = 1;
 
     /**
+     * Available mint types.
+     */
+    enum mintTypes { publicMint , restrictedMint }
+
+    /**
      * Mint type.
      */
-    bytes32 public mintType;
+    mintTypes public mintType;
 
     /**
      * Mint price.
@@ -77,7 +82,7 @@ contract Mint is AccessControl
     event MintUpdated(
         address target,
         uint256 mintVersion,
-        bytes32 mintType,
+        mintTypes mintType,
         uint256 mintPrice,
         uint256 mintMax,
         uint256 mintMaxAvailable,
@@ -89,7 +94,7 @@ contract Mint is AccessControl
      */
     function mint(uint256 quantity) external payable
     {
-        require(mintType == 'public', 'PUBLIC MINT IS NOT ACTIVE');
+        require(mintType == mintTypes.publicMint, 'PUBLIC MINT IS NOT ACTIVE');
         require(mintActive, 'MINT IS NOT ACTIVE');
         require(minted[_getMintedKey(_msgSender())] + quantity <= mintMax, 'EXCEEDS MAX MINT');
         _mint(_msgSender(), quantity, mintPrice);
@@ -100,7 +105,7 @@ contract Mint is AccessControl
      */
     function mint(bytes memory signature, uint256 assignedQuantity, uint256 quantity) external payable
     {
-        require(mintType != 'public', 'PUBLIC MINT IS ACTIVE');
+        require(mintType != mintTypes.publicMint, 'PUBLIC MINT IS ACTIVE');
         require(mintActive, 'MINT IS NOT ACTIVE');
         require(minted[_getMintedKey(_msgSender())] + quantity <= mintMax, 'EXCEEDS MAX MINT');
         require(quantity <= assignedQuantity, 'EXCEEDS ASSIGNED QUANTITY');
@@ -152,11 +157,20 @@ contract Mint is AccessControl
     }
 
     /**
-     * Set mint type.
+     * Set public mint type.
      */
-    function setMintType(bytes32 _mintType) external onlyRole(DEFAULT_ADMIN_ROLE)
+    function setPublicMintType() external onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        mintType = _mintType;
+        mintType = mintTypes.publicMint;
+        _fireMintUpdatedEvent();
+    }
+
+    /**
+     * Set restricted mint type.
+     */
+    function setRestrictedMintType() external onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        mintType = mintTypes.restrictedMint;
         _fireMintUpdatedEvent();
     }
 
@@ -206,9 +220,9 @@ contract Mint is AccessControl
     }
 
     /**
-     * Update target.
+     * Set target.
      */
-    function updateTarget(address _target) external onlyRole(DEFAULT_ADMIN_ROLE)
+    function setTarget(address _target) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
         target = _target;
         _fireMintUpdatedEvent();
@@ -218,19 +232,19 @@ contract Mint is AccessControl
      * Update mint.
      */
     function updateMint(
-        bytes32 _mintType,
         uint256 _mintPrice,
         uint256 _mintMax,
         uint256 _mintMaxAvailable,
-        bool _mintActive
+        bool _mintActive,
+        address _target
     ) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
         mintVersion++;
-        mintType = _mintType;
         mintPrice = _mintPrice;
         mintMax = _mintMax;
         mintMaxAvailable = _mintMaxAvailable;
         mintActive = _mintActive;
+        target = _target;
         _fireMintUpdatedEvent();
     }
 

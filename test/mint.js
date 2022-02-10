@@ -15,10 +15,43 @@ describe("Mint", function () {
         [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
     });
 
-    describe("Security", function () {
+    describe("Functionality", function () {
+        it("Has the correct mint version after deployment", async function () {
+            expect(await mint.mintVersion()).to.equal(1);
+        });
+        it("Can increment the mint version", async function () {
+            await mint.newMintVersion();
+            expect(await mint.mintVersion()).to.equal(2);
+            await mint.newMintVersion();
+            expect(await mint.mintVersion()).to.equal(3);
+        });
+        it("Can emit MintUpdated event when incrementing the mint version", async function () {
+            await expect(mint.newMintVersion()).to.emit(mint, "MintUpdated");
+        });
+        it("Cannot increment the mint version from non admin account", async function () {
+            await expect(mint.connect(addr1).newMintVersion()).to.be.reverted;
+        });
+        it("Can update the mint type", async function () {
+            await mint.setPublicMintType();
+            expect(await mint.mintType()).to.equal("public");
+            await mint.setRestrictedMintType();
+            expect(await mint.mintType()).to.equal("whitelist");
+        });
+        it("Can emit MintUpdated event when updating the mint type", async function () {
+            await expect(mint.setMintType("public")).to.emit(mint, "MintUpdated");
+        });
         it("Can update the target address", async function () {
-            await mint.updateTarget(owner.address);
+            await mint.setTarget(owner.address);
             expect(await mint.target()).to.equal(owner.address);
+            await mint.setTarget(addr1.address);
+            expect(await mint.target()).to.equal(addr1.address);
+        });
+        it("Can emit MintUpdated event when updating the target address", async function () {
+            await expect(mint.setTarget(owner.address)).to.emit(mint, "MintUpdated");
+        });
+        it("Cannot update the target address from non admin account", async function () {
+            await expect(mint.connect(addr1).setTarget(addr1.address)).to.be.reverted;
+            await expect(mint.connect(addr1).setTarget(owner.address)).to.be.reverted;
         });
     });
 });
