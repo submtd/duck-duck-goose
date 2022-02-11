@@ -4,7 +4,7 @@ pragma solidity ^0.8.3;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-contract Mint is AccessControl
+contract MintProxy is AccessControl
 {
     /**
      * Signer.
@@ -85,7 +85,7 @@ contract Mint is AccessControl
     /**
      * Public mint.
      */
-    function mint(uint256 quantity)
+    function publicMint(uint256 quantity)
     external
     payable
     correctMintType(mintTypes.publicMint)
@@ -98,7 +98,7 @@ contract Mint is AccessControl
     /**
      * Restricted mint.
      */
-    function mint(bytes memory signature, uint256 assignedQuantity, uint256 quantity)
+    function restrictedMint(bytes memory signature, uint256 assignedQuantity, uint256 quantity)
     external
     payable
     correctMintType(mintTypes.restrictedMint)
