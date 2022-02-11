@@ -92,25 +92,28 @@ contract Mint is AccessControl
     /**
      * Public mint.
      */
-    function mint(uint256 quantity) external payable
+    function mint(uint256 quantity)
+    external
+    payable
+    correctMintType(mintTypes.publicMint)
+    mintIsActive
+    belowMax(quantity)
     {
-        require(mintType == mintTypes.publicMint, 'PUBLIC MINT IS NOT ACTIVE');
-        require(mintActive, 'MINT IS NOT ACTIVE');
-        require(minted[_getMintedKey(_msgSender())] + quantity <= mintMax, 'EXCEEDS MAX MINT');
         _mint(_msgSender(), quantity, mintPrice);
     }
 
     /**
      * Restricted mint.
      */
-    function mint(bytes memory signature, uint256 assignedQuantity, uint256 quantity) external payable
+    function mint(bytes memory signature, uint256 assignedQuantity, uint256 quantity)
+    external
+    payable
+    correctMintType(mintTypes.restrictedMint)
+    mintIsActive
+    belowMax(quantity)
+    belowAssigned(assignedQuantity, quantity)
+    validSignature(signature, assignedQuantity)
     {
-        require(mintType != mintTypes.publicMint, 'PUBLIC MINT IS ACTIVE');
-        require(mintActive, 'MINT IS NOT ACTIVE');
-        require(minted[_getMintedKey(_msgSender())] + quantity <= mintMax, 'EXCEEDS MAX MINT');
-        require(quantity <= assignedQuantity, 'EXCEEDS ASSIGNED QUANTITY');
-        bytes32 messageHash = sha256(abi.encode(_msgSender(), assignedQuantity, mintVersion));
-        require(ECDSA.recover(messageHash, signature) == _signer, 'INVALID SIGNATURE');
         _mint(_msgSender(), quantity, mintPrice);
     }
 
@@ -125,10 +128,11 @@ contract Mint is AccessControl
     /**
      * Mint.
      */
-    function _mint(address to, uint256 quantity, uint256 price) internal
+    function _mint(address to, uint256 quantity, uint256 price)
+    internal
+    belowSupply(quantity)
+    correctPrice(quantity, price)
     {
-        require(totalMinted[mintVersion] + quantity <= mintMaxAvailable, 'EXCEEDS SUPPLY');
-        require(msg.value == quantity * price, 'INCORRECT VALUE');
         //mintable(target).mint(to, quantity);
         minted[_getMintedKey(to)] += quantity;
         totalMinted[mintVersion] += quantity;
@@ -157,20 +161,11 @@ contract Mint is AccessControl
     }
 
     /**
-     * Set public mint type.
+     * Set mint type.
      */
-    function setPublicMintType() external onlyRole(DEFAULT_ADMIN_ROLE)
+    function setMintType(uint _mintType) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        mintType = mintTypes.publicMint;
-        _fireMintUpdatedEvent();
-    }
-
-    /**
-     * Set restricted mint type.
-     */
-    function setRestrictedMintType() external onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        mintType = mintTypes.restrictedMint;
+        mintType = mintTypes(_mintType);
         _fireMintUpdatedEvent();
     }
 
@@ -232,6 +227,7 @@ contract Mint is AccessControl
      * Update mint.
      */
     function updateMint(
+        uint _mintType,
         uint256 _mintPrice,
         uint256 _mintMax,
         uint256 _mintMaxAvailable,
@@ -240,6 +236,7 @@ contract Mint is AccessControl
     ) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
         mintVersion++;
+        mintType = mintTypes(_mintType);
         mintPrice = _mintPrice;
         mintMax = _mintMax;
         mintMaxAvailable = _mintMaxAvailable;
@@ -270,6 +267,70 @@ contract Mint is AccessControl
     function updateSigner(address signer) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
         _signer = signer;
+    }
+
+    /**
+     * correctMintType modifier.
+     */
+    modifier correctMintType(mintTypes _mintType)
+    {
+        require(mintType == _mintType, 'INCORRECT MINT TYPE');
+        _;
+    }
+
+    /**
+     * mintIsActive modifier.
+     */
+    modifier mintIsActive()
+    {
+        require(mintActive, 'MINT IS NOT ACTIVE');
+        _;
+    }
+
+    /**
+     * belowMax modifier.
+     */
+    modifier belowMax(uint256 quantity)
+    {
+        require(minted[_getMintedKey(_msgSender())] + quantity <= mintMax, 'EXCEEDS MAX MINT');
+        _;
+    }
+
+    /**
+     * belowSupply modifier.
+     */
+    modifier belowSupply(uint256 quantity)
+    {
+        require(totalMinted[mintVersion] + quantity <= mintMaxAvailable, 'EXCEEDS SUPPLY');
+        _;
+    }
+
+    /**
+     * belowAssigned modifier.
+     */
+    modifier belowAssigned(uint256 assignedQuantity, uint256 quantity)
+    {
+        require(minted[_getMintedKey(_msgSender())] + quantity <= assignedQuantity, 'EXCEEDS ASSIGNED QUANTITY');
+        _;
+    }
+
+    /**
+     * validSignature modifier.
+     */
+    modifier validSignature(bytes memory signature, uint256 assignedQuantity)
+    {
+        bytes32 messageHash = sha256(abi.encode(_msgSender(), assignedQuantity, mintVersion));
+        require(ECDSA.recover(messageHash, signature) == _signer, 'INVALID SIGNATURE');
+        _;
+    }
+
+    /**
+     * correctPrice modifier.
+     */
+    modifier correctPrice(uint256 quantity, uint256 price)
+    {
+        require(msg.value == quantity * price, 'INCORRECT VALUE');
+        _;
     }
 }
 

@@ -32,13 +32,13 @@ describe("Mint", function () {
             await expect(mint.connect(addr1).newMintVersion()).to.be.reverted;
         });
         it("Can update the mint type", async function () {
-            await mint.setPublicMintType();
-            expect(await mint.mintType()).to.equal("public");
-            await mint.setRestrictedMintType();
-            expect(await mint.mintType()).to.equal("whitelist");
+            await mint.setMintType(0);
+            expect(await mint.mintType()).to.equal(0);
+            await mint.setMintType(1);
+            expect(await mint.mintType()).to.equal(1);
         });
         it("Can emit MintUpdated event when updating the mint type", async function () {
-            await expect(mint.setMintType("public")).to.emit(mint, "MintUpdated");
+            await expect(mint.setMintType(0)).to.emit(mint, "MintUpdated");
         });
         it("Can update the target address", async function () {
             await mint.setTarget(owner.address);
