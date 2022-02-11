@@ -20,7 +20,6 @@ contract Mint is AccessControl
      * Keep track of mints.
      */
     mapping(bytes32 => uint256) public minted;
-    mapping(uint256 => uint256) public totalMinted;
 
     /**
      * Use versioning to erase all minted mappings.
@@ -46,11 +45,6 @@ contract Mint is AccessControl
      * Max mint.
      */
     uint256 public mintMax;
-
-    /**
-     * Max available.
-     */
-    uint256 public mintMaxAvailable;
 
     /**
      * Active.
@@ -85,7 +79,6 @@ contract Mint is AccessControl
         mintTypes mintType,
         uint256 mintPrice,
         uint256 mintMax,
-        uint256 mintMaxAvailable,
         bool mintActive
     );
 
@@ -130,12 +123,10 @@ contract Mint is AccessControl
      */
     function _mint(address to, uint256 quantity, uint256 price)
     internal
-    belowSupply(quantity)
     correctPrice(quantity, price)
     {
         //mintable(target).mint(to, quantity);
         minted[_getMintedKey(to)] += quantity;
-        totalMinted[mintVersion] += quantity;
         emit Minted(to, quantity);
     }
 
@@ -188,15 +179,6 @@ contract Mint is AccessControl
     }
 
     /**
-     * Set max available.
-     */
-    function setMintMaxAvailable(uint256 _mintMaxAvailable) external onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        mintMaxAvailable = _mintMaxAvailable;
-        _fireMintUpdatedEvent();
-    }
-
-    /**
      * Activate mint.
      */
     function activateMint() external onlyRole(DEFAULT_ADMIN_ROLE)
@@ -224,33 +206,11 @@ contract Mint is AccessControl
     }
 
     /**
-     * Update mint.
-     */
-    function updateMint(
-        uint _mintType,
-        uint256 _mintPrice,
-        uint256 _mintMax,
-        uint256 _mintMaxAvailable,
-        bool _mintActive,
-        address _target
-    ) external onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        mintVersion++;
-        mintType = mintTypes(_mintType);
-        mintPrice = _mintPrice;
-        mintMax = _mintMax;
-        mintMaxAvailable = _mintMaxAvailable;
-        mintActive = _mintActive;
-        target = _target;
-        _fireMintUpdatedEvent();
-    }
-
-    /**
      * Fire MintUpdated event
      */
     function _fireMintUpdatedEvent() internal
     {
-        emit MintUpdated(target, mintVersion, mintType, mintPrice, mintMax, mintMaxAvailable, mintActive);
+        emit MintUpdated(target, mintVersion, mintType, mintPrice, mintMax, mintActive);
     }
 
     /**
@@ -293,15 +253,6 @@ contract Mint is AccessControl
     modifier belowMax(uint256 quantity)
     {
         require(minted[_getMintedKey(_msgSender())] + quantity <= mintMax, 'EXCEEDS MAX MINT');
-        _;
-    }
-
-    /**
-     * belowSupply modifier.
-     */
-    modifier belowSupply(uint256 quantity)
-    {
-        require(totalMinted[mintVersion] + quantity <= mintMaxAvailable, 'EXCEEDS SUPPLY');
         _;
     }
 

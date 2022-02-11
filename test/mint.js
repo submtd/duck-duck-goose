@@ -40,6 +40,53 @@ describe("Mint", function () {
         it("Can emit MintUpdated event when updating the mint type", async function () {
             await expect(mint.setMintType(0)).to.emit(mint, "MintUpdated");
         });
+        it("Cannot update the mint type from a non admin account", async function () {
+            await expect(mint.connect(addr1).setMintType(0)).to.be.reverted;
+        });
+        it("Can update the mint price", async function () {
+            await mint.setMintPrice(1000000);
+            expect(await mint.mintPrice()).to.equal(1000000);
+            await mint.setMintPrice(9999999);
+            expect(await mint.mintPrice()).to.equal(9999999);
+        });
+        it("Can emit MintUpdated event when updating the mint price", async function () {
+            await expect(mint.setMintPrice(1000000)).to.emit(mint, "MintUpdated");
+        });
+        it("Cannot update the mint price from a non admin account", async function () {
+            await expect(mint.connect(addr1).setMintPrice(1000000)).to.be.reverted;
+        });
+        it("Can update the mint max", async function () {
+            await mint.setMintMax(1000000);
+            expect(await mint.mintMax()).to.equal(1000000);
+            await mint.setMintMax(9999999);
+            expect(await mint.mintMax()).to.equal(9999999);
+        });
+        it("Can emit MintUpdated event when updating the mint max", async function () {
+            await expect(mint.setMintMax(1000000)).to.emit(mint, "MintUpdated");
+        });
+        it("Cannot update the mint max from a non admin account", async function () {
+            await expect(mint.connect(addr1).setMintMax(1000000)).to.be.reverted;
+        });
+        it("Can activate mint", async function () {
+            await mint.activateMint();
+            expect(await mint.mintActive()).to.equal(true);
+        });
+        it("Can emit MintUpdated event when activating the mint", async function () {
+            await expect(mint.activateMint()).to.emit(mint, "MintUpdated");
+        });
+        it("Can deactivate mint", async function () {
+            await mint.deactivateMint();
+            expect(await mint.mintActive()).to.equal(false);
+        });
+        it("Can emit MintUpdated event when deactivating the mint", async function () {
+            await expect(mint.deactivateMint()).to.emit(mint, "MintUpdated");
+        });
+        it("Cannot activate mint from a non admin account", async function () {
+            await expect(mint.connect(addr1).activateMint()).to.be.reverted;
+        });
+        it("Cannot deactivate mint from a non admin account", async function () {
+            await expect(mint.connect(addr1).deactivateMint()).to.be.reverted;
+        });
         it("Can update the target address", async function () {
             await mint.setTarget(owner.address);
             expect(await mint.target()).to.equal(owner.address);
