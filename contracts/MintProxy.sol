@@ -8,46 +8,56 @@ contract MintProxy is AccessControl
 {
     /**
      * Signer.
+     * @dev this is the address used to verify restricted mint addresses.
      */
     address private _signer;
 
     /**
-     * Target contract address.
+     * Target.
+     * @dev address of the contract with the real mint function.
      */
     address public target;
 
     /**
-     * Keep track of mints.
+     * Minted.
+     * @dev store quantity minted for each address using keccak256 on mint version + address.
      */
     mapping(bytes32 => uint256) public minted;
 
     /**
-     * Use versioning to erase all minted mappings.
+     * MintVersion.
+     * @dev by versioning the mint, we can effectively clear minted data to resue the contract.
      */
     uint256 public mintVersion = 1;
 
     /**
-     * Available mint types.
+     * MintTypes.
+     * @dev struct for storing mint types... public or restricted.
      */
     enum mintTypes { publicMint , restrictedMint }
 
     /**
-     * Mint type.
+     * MintTypes.
+     * @dev public variable to store the current mint type.
      */
     mintTypes public mintType;
 
     /**
-     * Mint price.
+     * MintPrice.
+     * @dev price of the mint in wei.
      */
     uint256 public mintPrice;
 
     /**
-     * Max mint.
+     * MaxMint.
+     * @dev maximum amount someone can mint in the current version. Does not affect
+     * restricted mint or admin mint.
      */
     uint256 public mintMax;
 
     /**
-     * Active.
+     * MintActive.
+     * @dev whether or not the mint is currently active. Does not affect admin mint.
      */
     bool public mintActive;
 
@@ -92,6 +102,11 @@ contract MintProxy is AccessControl
 
     /**
      * Public mint.
+     * check that mintType = publicMint
+     * check that mintActive = true
+     * check that minted + quantity <= maxMint
+     *
+     * @param quantity uint256
      */
     function publicMint(uint256 quantity)
     external
@@ -105,6 +120,14 @@ contract MintProxy is AccessControl
 
     /**
      * Restricted mint.
+     * check that mintType = restrictedMint
+     * check that mintActive = true
+     * check that quantity <= assignedQuantity
+     * check that signature is valid
+     *
+     * @param signature bytes memory
+     * @param assignedQuantity uint256
+     * @param quantity uint256
      */
     function restrictedMint(bytes memory signature, uint256 assignedQuantity, uint256 quantity)
     external
@@ -119,6 +142,10 @@ contract MintProxy is AccessControl
 
     /**
      * Admin mint.
+     * allow admins to mint unrestricted
+     *
+     * @param to address
+     * @param quantity uint256
      */
     function adminMint(address to, uint256 quantity) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
@@ -127,6 +154,12 @@ contract MintProxy is AccessControl
 
     /**
      * Mint.
+     * internal mint function
+     * check that msg.value == quantity * mintPrice
+     *
+     * @param to address
+     * @param quantity uint256
+     * @param price uint256
      */
     function _mint(address to, uint256 quantity, uint256 price)
     internal
@@ -139,6 +172,10 @@ contract MintProxy is AccessControl
 
     /**
      * Get minted by address.
+     * return mint quantity for address in current mint version
+     *
+     * @param _address address
+     * @return uint256
      */
     function mintedByAddress(address _address) public view returns(uint256)
     {
@@ -160,6 +197,8 @@ contract MintProxy is AccessControl
 
     /**
      * Set mint type.
+     *
+     * @param _mintType uint
      */
     function setMintType(uint _mintType) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
@@ -169,6 +208,8 @@ contract MintProxy is AccessControl
 
     /**
      * Set mint price.
+     *
+     * @param _mintPrice uint256
      */
     function setMintPrice(uint256 _mintPrice) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
@@ -178,6 +219,8 @@ contract MintProxy is AccessControl
 
     /**
      * Set max mint.
+     *
+     * @param _mintMax uint256
      */
     function setMintMax(uint256 _mintMax) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
@@ -205,6 +248,8 @@ contract MintProxy is AccessControl
 
     /**
      * Set target.
+     *
+     * @param _target address
      */
     function setTarget(address _target) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
@@ -222,6 +267,9 @@ contract MintProxy is AccessControl
 
     /**
      * Get key for mint mapping.
+     * return keccak256 on mintVersion and _address
+     *
+     * @param _address address
      */
     function _getMintedKey(address _address) internal view returns(bytes32)
     {
@@ -230,6 +278,8 @@ contract MintProxy is AccessControl
 
     /**
      * Update signer.
+     *
+     * @param signer address
      */
     function updateSigner(address signer) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
@@ -238,6 +288,8 @@ contract MintProxy is AccessControl
 
     /**
      * Withdraw.
+     *
+     * @param to address
      */
     function withdraw(address to) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
@@ -248,6 +300,8 @@ contract MintProxy is AccessControl
 
     /**
      * correctMintType modifier.
+     *
+     * @param _mintType mintTypes
      */
     modifier correctMintType(mintTypes _mintType)
     {
@@ -266,6 +320,8 @@ contract MintProxy is AccessControl
 
     /**
      * belowMax modifier.
+     *
+     * @param quantity uint256
      */
     modifier belowMax(uint256 quantity)
     {
@@ -275,6 +331,9 @@ contract MintProxy is AccessControl
 
     /**
      * belowAssigned modifier.
+     *
+     * @param assignedQuantity uint256
+     * @param quantity uint256
      */
     modifier belowAssigned(uint256 assignedQuantity, uint256 quantity)
     {
@@ -284,6 +343,9 @@ contract MintProxy is AccessControl
 
     /**
      * validSignature modifier.
+     *
+     * @param signature bytes memory
+     * @param assignedQuantity uint256
      */
     modifier validSignature(bytes memory signature, uint256 assignedQuantity)
     {
@@ -294,6 +356,9 @@ contract MintProxy is AccessControl
 
     /**
      * correctPrice modifier.
+     *
+     * @param quantity uint256
+     * @param price uint256
      */
     modifier correctPrice(uint256 quantity, uint256 price)
     {
