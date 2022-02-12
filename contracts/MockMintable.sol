@@ -3,7 +3,7 @@ pragma solidity ^0.8.3;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract Mintable is AccessControl
+contract MockMintable is AccessControl
 {
     /**
      * Keep track of mints.

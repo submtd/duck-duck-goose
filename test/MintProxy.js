@@ -10,8 +10,8 @@ describe("Mint", function () {
 
     // RUN THIS BEFORE EACH TEST
     beforeEach(async function () {
-        Mintable = await ethers.getContractFactory("Mintable");
-        mintable = await Mintable.deploy();
+        MockMintable = await ethers.getContractFactory("MockMintable");
+        mintable = await MockMintable.deploy();
         MintProxy = await ethers.getContractFactory("MintProxy");
         mintproxy = await MintProxy.deploy();
         [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
