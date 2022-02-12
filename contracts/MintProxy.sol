@@ -83,6 +83,14 @@ contract MintProxy is AccessControl
     );
 
     /**
+     * Contract withdrawn
+     */
+    event ContractWithdrawn(
+        address to,
+        uint256 amount
+    );
+
+    /**
      * Public mint.
      */
     function publicMint(uint256 quantity)
@@ -103,7 +111,6 @@ contract MintProxy is AccessControl
     payable
     correctMintType(mintTypes.restrictedMint)
     mintIsActive
-    belowMax(quantity)
     belowAssigned(assignedQuantity, quantity)
     validSignature(signature, assignedQuantity)
     {
@@ -125,7 +132,7 @@ contract MintProxy is AccessControl
     internal
     correctPrice(quantity, price)
     {
-        //mintable(target).mint(to, quantity);
+        mintable(target).mint(to, quantity);
         minted[_getMintedKey(to)] += quantity;
         emit Minted(to, quantity);
     }
@@ -234,7 +241,9 @@ contract MintProxy is AccessControl
      */
     function withdraw(address to) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        payable(to).transfer(address(this).balance);
+        uint256 amount = address(this).balance;
+        payable(to).transfer(amount);
+        emit ContractWithdrawn(to, amount);
     }
 
     /**
