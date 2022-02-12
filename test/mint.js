@@ -203,20 +203,84 @@ describe("Mint", function () {
             await mintproxy.deactivateMint();
             const signature = getSignature(ownerPrivateKey, addr1.address, 1, 1);
             await expect(mintproxy.connect(addr1).restrictedMint(signature, 1, 1)).to.be.reverted;
-
         });
-        it("Can admin mint", async function () {});
-        it("Can admin mint when mintType is public", async function () {});
-        it("Can admin mint when mintType is restricted", async function () {});
-        it("Can admin mint when mint is not active", async function () {});
-        it("Cannot admin mint from a non admin account", async function () {});
-        it("Can get the correct minted by address amount", async function () {});
-        it("Can create a new mint version and public mint with a reset max", async function () {});
-        it("Can create a new mint version and restricted mint", async function () {});
+        it("Can restricted mint with price other than zero", async function () {
+            const signature = getSignature(ownerPrivateKey, addr1.address, 1, 1);
+            await mintproxy.setMintType(1);
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(0);
+            await expect(mintproxy.connect(addr1).restrictedMint(signature, 1, 1, { value: 1000 })).to.not.be.reverted;
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(1);
+        });
+        it("Can admin mint", async function () {
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(0);
+            await expect(mintproxy.adminMint(addr1.address, 1)).to.not.be.reverted;
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(1);
+        });
+        it("Can admin mint when mintType is public", async function () {
+            await mintproxy.setMintType(0);
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(0);
+            await expect(mintproxy.adminMint(addr1.address, 1)).to.not.be.reverted;
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(1);
+        });
+        it("Can admin mint when mintType is restricted", async function () {
+            await mintproxy.setMintType(1);
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(0);
+            await expect(mintproxy.adminMint(addr1.address, 1)).to.not.be.reverted;
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(1);
+        });
+        it("Can admin mint when mint is not active", async function () {
+            await mintproxy.deactivateMint();
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(0);
+            await expect(mintproxy.adminMint(addr1.address, 1)).to.not.be.reverted;
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(1);
+        });
+        it("Cannot admin mint from a non admin account", async function () {
+            await expect(mintproxy.connect(addr1).adminMint(addr1.address, 1)).to.be.reverted;
+        });
+        it("Can create a new mint version and public mint with a reset max", async function () {
+            await mintproxy.setMintMax(1);
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(0);
+            await expect(mintproxy.connect(addr1).publicMint(1, { value: 1000 })).to.not.be.reverted;
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(1);
+            await expect(mintproxy.connect(addr1).publicMint(1, { value: 1000 })).to.be.reverted;
+            await mintproxy.newMintVersion();
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(0);
+            await expect(mintproxy.connect(addr1).publicMint(1, { value: 1000 })).to.not.be.reverted;
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(1);
+            await expect(mintproxy.connect(addr1).publicMint(1, { value: 1000 })).to.be.reverted;
+        });
+        it("Can create a new mint version and restricted mint", async function () {
+            const signature = getSignature(ownerPrivateKey, addr1.address, 1, 1);
+            await mintproxy.setMintType(1);
+            await mintproxy.setMintPrice(0);
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(0);
+            await expect(mintproxy.connect(addr1).restrictedMint(signature, 1, 1)).to.not.be.reverted;
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(1);
+            await expect(mintproxy.connect(addr1).restrictedMint(signature, 1, 1)).to.be.reverted;
+            await mintproxy.newMintVersion();
+            await expect(mintproxy.connect(addr1).restrictedMint(signature, 1, 1)).to.be.reverted;
+            const newSignature = getSignature(ownerPrivateKey, addr1.address, 1, 2);
+            await expect(mintproxy.connect(addr1).restrictedMint(newSignature, 1, 1)).to.not.be.reverted;
+            expect(await mintproxy.mintedByAddress(addr1.address)).to.equal(1);
+            await expect(mintproxy.connect(addr1).restrictedMint(newSignature, 1, 1)).to.be.reverted;
+        });
     });
     describe("Finance", function () {
-        it("Can withdraw the contract balance", async function () {});
-        it("Cannot withdraw from a non admin account", async function () {});
+        it("Can withdraw the contract balance", async function () {
+            await mintproxy.setMintPrice('1000000000000000000')
+            expect(await ethers.provider.getBalance(mintproxy.address)).to.equal(0);
+            let ownerBalance = await ethers.provider.getBalance(owner.address);
+            await mintproxy.publicMint(1, { value: '1000000000000000000' });
+            let newOwnerBalance = await ethers.provider.getBalance(owner.address);
+            expect(newOwnerBalance).to.be.below(ownerBalance);
+            expect(await ethers.provider.getBalance(mintproxy.address)).to.equal('1000000000000000000');
+            await mintproxy.withdraw(owner.address);
+            expect(await ethers.provider.getBalance(owner.address)).to.be.above(newOwnerBalance);
+            expect(await ethers.provider.getBalance(mintproxy.address)).to.equal(0);
+        });
+        it("Cannot withdraw from a non admin account", async function () {
+            await expect(mintproxy.connect(addr1).withdraw(addr1.address)).to.be.reverted;
+        });
     });
 });
 

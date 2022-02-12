@@ -230,6 +230,14 @@ contract MintProxy is AccessControl
     }
 
     /**
+     * Withdraw.
+     */
+    function withdraw(address to) external onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        payable(to).transfer(address(this).balance);
+    }
+
+    /**
      * correctMintType modifier.
      */
     modifier correctMintType(mintTypes _mintType)
