@@ -10,12 +10,13 @@ describe("Mint", function () {
 
     // RUN THIS BEFORE EACH TEST
     beforeEach(async function () {
-        MockMintable = await ethers.getContractFactory("MockMintable");
-        mintable = await MockMintable.deploy();
+        FurioToken = await ethers.getContractFactory("FurioToken");
+        furio = await FurioToken.deploy();
         MintProxy = await ethers.getContractFactory("MintProxy");
         mintproxy = await MintProxy.deploy();
         [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
-        await mintproxy.setTarget(mintable.address);
+        await furio.grantRole(furio.MINTER_ROLE(), mintproxy.address);
+        await mintproxy.setTarget(furio.address);
         await mintproxy.setMintPrice(1000);
         await mintproxy.setMintMax(10);
         await mintproxy.activateMint();

@@ -165,7 +165,7 @@ contract MintProxy is AccessControl
     internal
     correctPrice(quantity, price)
     {
-        mintable(target).mint(to, quantity);
+        adminMintable(target).adminMint(to, quantity);
         minted[_getMintedKey(to)] += quantity;
         emit Minted(to, quantity);
     }
@@ -367,7 +367,7 @@ contract MintProxy is AccessControl
     }
 }
 
-interface mintable
+interface adminMintable
 {
-    function mint(address to, uint256 quantity) external;
+    function adminMint(address to, uint256 quantity) external;
 }

@@ -3,7 +3,7 @@ pragma solidity ^0.8.3;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract MockMintable is AccessControl
+contract MockAdminMintable is AccessControl
 {
     /**
      * Keep track of mints.
@@ -20,9 +20,9 @@ contract MockMintable is AccessControl
     }
 
     /**
-     * Mint.
+     * AdminMint.
      */
-    function mint(address to, uint256 quantity) external
+    function adminMint(address to, uint256 quantity) external
     {
         // increment minted
         minted[to] += quantity;
