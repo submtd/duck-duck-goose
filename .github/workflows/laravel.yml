@@ -1,0 +1,39 @@
+name: Laravel
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+  pull_request_target:
+    branches: [ develop ]
+
+jobs:
+  laravel-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.BUILD_READ_KEY }}
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: '7.4'
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+      - name: Install Lando runtime
+        run: |
+          wget https://files.devwithlando.io/lando-stable.deb
+          sudo dpkg -i --ignore-depends=docker-ce lando-stable.deb
+      - name: Start Lando
+        run: lando start
+      - name: Generate key
+        run: lando artisan key:generate
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
+        run: lando phpunit

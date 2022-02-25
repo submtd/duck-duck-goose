@@ -10,3 +10,15 @@ typechain
 scripts/addresses.json
 cache
 artifacts
+/public/hot
+/public/storage
+/public/js
+/public/css
+/storage
+/vendor
+.env.backup
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+.lando.local.yml
