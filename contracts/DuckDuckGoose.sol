@@ -61,7 +61,6 @@ contract DuckDuckGoose is Ownable, ERC721 {
     function mint(uint256 quantity) external payable {
         require(msg.value >= quantity * price, 'Value is too low');
         for(uint256 i = 0; i < quantity; i++) {
-            _tokenIdTracker.increment();
             _safeMint(msg.sender, _tokenIdTracker.current());
             if(_tokenIdTracker.current() % (10000 / goosePercentage) == 0) {
                 findGoose();
@@ -148,7 +147,7 @@ contract DuckDuckGoose is Ownable, ERC721 {
      * Token URI.
      */
     function tokenURI(uint256 _tokenId) public view override returns (string memory) {
-        require(_tokenId < _tokenIdTracker.current(), 'Token does not exist');
+        require(_tokenId > 0 && _tokenId <= _tokenIdTracker.current(), 'Token does not exist');
         string memory image = duck;
         if(geese[_tokenId]) {
             image = goose;
