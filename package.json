@@ -1,15 +1,12 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "mix",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "mix --production"
+        "build": "webpack --mode production",
+        "start": "webpack-dev-server --mode development"
     },
     "devDependencies": {
+        "@babel/core": "^7.17.5",
+        "@babel/preset-env": "^7.16.11",
         "@fortawesome/fontawesome-free": "^6.0.0",
         "@nomiclabs/hardhat-ethers": "^2.0.5",
         "@nomiclabs/hardhat-etherscan": "^3.0.1",
@@ -20,6 +17,7 @@
         "@popperjs/core": "^2.11.2",
         "@walletconnect/web3-provider": "^1.7.1",
         "axios": "^0.21.4",
+        "babel-loader": "^8.2.3",
         "bootstrap": "^5.1.3",
         "chai": "^4.3.6",
         "dotenv": "^16.0.0",
@@ -39,6 +37,14 @@
         "vue-template-compiler": "^2.6.14",
         "vuex": "^4.0.2",
         "walletlink": "^2.5.0",
-        "web3": "^1.7.0"
-    }
+        "web3": "^1.7.0",
+        "webpack": "^5.69.1",
+        "webpack-cli": "^4.9.2",
+        "webpack-dev-server": "^4.7.4"
+    },
+    "browserlsist": [
+        "> 1%",
+        "last 2 versions",
+        "not dead"
+    ]
 }
