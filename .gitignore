@@ -22,3 +22,4 @@ docker-compose.override.yml
 Homestead.json
 Homestead.yaml
 .lando.local.yml
+/dist
