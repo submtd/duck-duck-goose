@@ -61,9 +61,9 @@ contract DuckDuckGoose is Ownable, ERC721 {
     function mint(uint256 quantity) external payable {
         require(msg.value >= quantity * price, 'Value is too low');
         for(uint256 i = 0; i < quantity; i++) {
-            _safeMint(msg.sender, _tokenIdTracker.current());
             _tokenIdTracker.increment();
-            if(_tokenIdTracker.current() % goosePercentage / 100 == 0) {
+            _safeMint(msg.sender, _tokenIdTracker.current());
+            if(_tokenIdTracker.current() % (10000 / goosePercentage) == 0) {
                 findGoose();
             }
         }
@@ -165,7 +165,7 @@ contract DuckDuckGoose is Ownable, ERC721 {
                             addressToString(owner()),
                             '","seller_fee_basis_points":"1000","image":"',
                             image,
-                            '","attributes":[{"trait_type":"Ticket","value","',
+                            '","attributes":[{"trait_type":"Ticket","value":"',
                             Strings.toString(_tokenId),
                             '"}]}'
                         )
