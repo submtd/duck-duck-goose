@@ -7,7 +7,7 @@
             <div class="alert alert-success">Success! Transaction Hash: {{ txid }}</div>
         </div>
         <div v-show="!connected">
-            <h4>Connect Your Wallet</h4>
+            <h6>Connect Your Wallet</h6>
             <button @click="connectMetaMask" class="btn btn-lg btn-success col-12 mb-2">MetaMask</button>
             <button @click="connectCoinbase" class="btn btn-lg btn-success col-12 mb-2">Coinbase Wallet</button>
             <button @click="connectWalletConnect" class="btn btn-lg btn-success col-12 mb-2">WalletConnect</button>
@@ -15,8 +15,24 @@
         <div v-show="connected">
             <label class="visually-hidden" for="quantity">Quantity</label>
             <div class="input-group">
-                <input type="number" class="form-control col-3" id="quantity" min="1" v-model="quantity">
-                <button class="btn btn-lg btn-success col-9" @click="mint" :disabled="mint_button_disabled">Mint ({{ totalCost }} Eth)</button>
+                <input type="number" class="form-control col-2" id="quantity" min="1" v-model="quantity">
+                <button class="btn btn-lg btn-success col-10" @click="mint" :disabled="mint_button_disabled">Mint ({{ totalCost }} ETH)</button>
+            </div>
+            <div class="carousel slide text-center text-secondary" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <small>A <strong class="text-success">goose</strong> is found every <strong class="text-dark"><i>{{ goosePercentage }} mints</i></strong>!</small>
+                    </div>
+                    <div class="carousel-item">
+                        <small>The current prize for finding a <strong class="text-success">goose</strong> is <strong class="text-dark"><i>{{ prizeBank }} ETH</i></strong>!</small>
+                    </div>
+                    <div class="carousel-item">
+                        <small>The prize <strong class="text-dark"><i>increases with every mint</i></strong> until a <strong class="text-success">goose</strong> is found!</small>
+                    </div>
+                    <div class="carousel-item">
+                        <small><strong class="text-dark"><i>{{ totalSupply }}</i></strong> <strong class="text-success">Duck, Duck, Goose NFTs</strong> have been minted so far!</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -27,14 +43,12 @@
     import WalletLink from "walletlink";
     import Web3 from "web3";
 
-    const price = '1000000000000000';
     const networkId = 4;
     const networkName = 'Rinkeby Testnet';
     const infuraId = 'b8e7a65f07574f89a1424b075a31f605';
     const infuraUrl = 'https://rinkeby.infura.io/v3/b8e7a65f07574f89a1424b075a31f605';
-    const contractAddress = '';
-    const contractAbi = '';
-    const gas = '3000000';
+    const contractAddress = '0x3D9f4aCb56334236d5da164aF8d352E34D494990';
+    const contractAbi = '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"approved","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"goose","type":"uint256"}],"name":"GooseFound","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"_address","type":"address"}],"name":"addressToString","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"approve","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"contractURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"geese","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getApproved","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"goosePercentage","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"goosePrizePercentage","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"operator","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"quantity","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"price","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"prizeBank","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"bytes","name":"_data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"bool","name":"approved","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_percentage","type":"uint256"}],"name":"setGoosePercentage","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_percentage","type":"uint256"}],"name":"setGoosePrizePercentage","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_price","type":"uint256"}],"name":"setPrice","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"tokenOfOwnerByIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"}]';
 
     export default {
         data() {
@@ -43,22 +57,27 @@
                 account: null,
                 provider: null,
                 web3: null,
+                contract: null,
                 alert: null,
                 mint_button_disabled: false,
                 quantity: 1,
                 txid: null,
+                price: null,
+                goosePercentage: null,
+                prizeBank: null,
+                totalSupply: null,
             }
         },
         computed: {
             priceInEth: function() {
                 try {
                     const web3 = new Web3();
-                    return web3.utils.fromWei(price, 'ether');
+                    return web3.utils.fromWei(this.price, 'ether');
                 } catch(error) {}
             },
             totalCost: function() {
                 try {
-                    return Math.round(this.quantity * this.priceInEth * 1000) / 1000;
+                    return Math.round(this.quantity * this.priceInEth * 10000) / 10000;
                 } catch(error) {}
             }
         },
@@ -113,9 +132,14 @@
                         return false;
                     }
                     const accounts = await this.web3.eth.getAccounts();
+                    this.account = accounts[0];
+                    this.contract = new this.web3.eth.Contract(JSON.parse(contractAbi), contractAddress);
+                    this.price = await this.contract.methods.price().call();
+                    this.goosePercentage = 10000 / await this.contract.methods.goosePercentage().call();
+                    this.prizeBank = this.web3.utils.fromWei(await this.contract.methods.prizeBank().call(), 'ether');
+                    this.totalSupply = await this.contract.methods.totalSupply().call();
                     this.alert = null;
                     this.connected = true;
-                    this.account = accounts[0];
                 } catch(error) {
                     this.alert = error.message;
                     return false;
@@ -123,16 +147,16 @@
             },
             async mint() {
                 this.mint_button_disabled = true;
+                this.txid = null;
                 this.alert = 'Waiting on response from wallet';
                 try {
-                    const value = price * this.quantity;
-                    const abi = JSON.parse(contractAbi);
-                    const contract = this.web3.eth.Contract(abi, contractAddress, { gas: gas });
-                    const estimatedGas = Math.round(await contract.methods.mint(this.quantity).estimateGas({ value: value.toString(), from: this.account }) * 1.0);
-                    const result = await contract.methods.mint(this.quantity).send({ value: value.toString(), from: this.account, gas: estimatedGas });
+                    const gas = await this.contract.methods.mint(this.quantity).estimateGas({ from: this.account, value: this.price * this.quantity });
+                    const result = await this.contract.methods.mint(this.quantity).send({ value: this.price * this.quantity, from: this.account, gas: gas });
+                    this.txid = result.transactionHash;
+                    this.prizeBank = this.web3.utils.fromWei(await this.contract.methods.prizeBank().call(), 'ether');
+                    this.totalSupply = await this.contract.methods.totalSupply().call();
                     this.alert = null;
                     this.mint_button_disabled = false;
-                    this.txid = result.transactionHash;
                 } catch(error) {
                     this.alert = error.message;
                     this.mint_button_disabled = false;
