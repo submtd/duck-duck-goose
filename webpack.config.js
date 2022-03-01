@@ -9,7 +9,7 @@ module.exports = {
         path: path.resolve(__dirname, './public'),
         filename: 'app.js',
     },
-    mode: 'production',
+    mode: 'development',
     module: {
         rules: [
             {
