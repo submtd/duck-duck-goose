@@ -278,17 +278,47 @@ contract DuckDuckGoose is Ownable, ERC721 {
                             '","description":"Play the classic game of Duck, Duck, Goose on the blockchain. Hatch a goose and win a prize!","fee_recipient":"',
                             addressToString(owner()),
                             '","seller_fee_basis_points":"1000","image":"',
-                            image,
+                            'data:image/svg+xml;base64,',
+                            Base64.encode(bytes(svg(_tokenId))),
+                            //image,
                             '","attributes":[{"trait_type":"Breed","value":"',
                             breed,
                             '"},{"trait_type":"Generation","value":"',
                             Strings.toString(generations[_tokenId]),
+                            '"},{"trait_type":"Background","value":"',
+                            color(_tokenId),
                             '"}]}'
                         )
                     )
                 )
             )
         );
+    }
+
+    /**
+     * Color from token id.
+     */
+    function color(uint256 _tokenId) internal pure returns(string memory) {
+        uint red = _tokenId % 100 + 155;
+        uint green = _tokenId % 10 * 10 + 155;
+        uint blue = _tokenId % 3 * 30 + 155;
+        return string(abi.encodePacked(
+            'rgb(',Strings.toString(red),',',Strings.toString(green),',',Strings.toString(blue),')'
+        ));
+    }
+
+    /**
+     * Make SVG
+     */
+    function svg(uint256 _tokenId) internal pure returns(string memory) {
+        return string(abi.encodePacked(
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
+            '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 2400 2400" style="stroke-width:0;background:',
+            color(_tokenId),
+            ';margin: auto;height: -webkit-fill-available">',
+            '</svg>'
+        ));
     }
 
     /**
