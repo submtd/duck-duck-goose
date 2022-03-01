@@ -24,24 +24,6 @@ contract DuckDuckGoose is Ownable, ERC721 {
     mapping(uint256 => itemType) public items;
 
     /**
-     * Egg image.
-     * @dev Base64 encoded image of an egg.
-     */
-    string public egg = 'data:image/png;base64,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';
-
-    /**
-     * Duck image.
-     * @dev Base64 encoded image of a duck.
-     */
-    string public duck = 'data:image/png;base64,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';
-
-    /**
-     * Goose image.
-     * @dev Base64 encoded image of a goose.
-     */
-    string public goose = 'data:image/png;base64,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';
-
-    /**
      * Egg count.
      * @dev how many eggs are there currently?
      */
@@ -64,7 +46,9 @@ contract DuckDuckGoose is Ownable, ERC721 {
      * @dev every XX mints, all eggs will hatch and one of those will
      * be a goose while the others are ducks.
      */
-    uint256 public hatchCycle = 1;
+    uint256 public hatchCycleMinimum = 5;
+    uint256 public hatchCycle = hatchCycleMinimum;
+    uint256 public hatchCycleMaximum = 500;
 
     /**
      * Generation.
@@ -119,7 +103,7 @@ contract DuckDuckGoose is Ownable, ERC721 {
      * Goose hatched event.
      * @dev this fires when a goose hatches.
      */
-    event GooseHatched(uint256 goose);
+    event GooseHatched(uint256 goose, address gooseOwner, uint256 prize);
 
     /**
      * Mint.
@@ -176,15 +160,19 @@ contract DuckDuckGoose is Ownable, ERC721 {
         generation++;
         // increment hatch cycle.
         hatchCycle++;
+        if(hatchCycle > hatchCycleMaximum) {
+            hatchCycle = hatchCycleMinimum;
+        }
         // pay the goose owner for their trouble!
-        payable(ownerOf(hatchedGoose)).transfer(prizeBank);
-        // pay the owner some rent.
+        address gooseOwner = ownerOf(hatchedGoose);
+        payable(gooseOwner).transfer(prizeBank);
+        // tell the world we have a new goose.
+        emit GooseHatched(hatchedGoose, gooseOwner, prizeBank);
+        // pay the contract owner some rent.
         payable(owner()).transfer(_ownerBank);
         // reset banks.
         prizeBank = 0;
         _ownerBank = 0;
-        // tell the world we have a new goose.
-        emit GooseHatched(hatchedGoose);
     }
 
     /**
@@ -228,6 +216,19 @@ contract DuckDuckGoose is Ownable, ERC721 {
     }
 
     /**
+     * Set hatch cycle minimum.
+     */
+    function setHatchCycleMinimum(uint256 _cycle) external onlyOwner {
+        hatchCycleMinimum = _cycle;
+    }
+
+    /**
+     * Set hatch cycle maximum.
+     */
+    function setHatchCycleMaximum(uint256 _cycle) external onlyOwner {
+        hatchCycleMaximum = _cycle;
+    }
+    /**
      * Set goose prize percentage.
      */
     function setGoosePrizePercentage(uint256 _percentage) external onlyOwner {
@@ -257,15 +258,12 @@ contract DuckDuckGoose is Ownable, ERC721 {
      */
     function tokenURI(uint256 _tokenId) public view override returns (string memory) {
         require(_tokenId > 0 && _tokenId <= _tokenIdTracker, 'Token does not exist');
-        string memory breed = 'egg';
-        string memory image = egg;
+        string memory breed = 'Egg';
         if(items[_tokenId] == itemType.duck) {
-            breed = 'duck';
-            image = duck;
+            breed = 'Duck';
         }
         if(items[_tokenId] == itemType.goose) {
-            breed = 'goose';
-            image = goose;
+            breed = 'Goose';
         }
         return string(
             abi.encodePacked(
@@ -278,16 +276,23 @@ contract DuckDuckGoose is Ownable, ERC721 {
                             '","description":"Play the classic game of Duck, Duck, Goose on the blockchain. Hatch a goose and win a prize!","fee_recipient":"',
                             addressToString(owner()),
                             '","seller_fee_basis_points":"1000","image":"',
+                            //svg(_tokenId),
                             'data:image/svg+xml;base64,',
                             Base64.encode(bytes(svg(_tokenId))),
                             //image,
-                            '","attributes":[{"trait_type":"Breed","value":"',
-                            breed,
-                            '"},{"trait_type":"Generation","value":"',
-                            Strings.toString(generations[_tokenId]),
-                            '"},{"trait_type":"Background","value":"',
-                            color(_tokenId),
-                            '"}]}'
+                            '","attributes":',
+                            abi.encodePacked(
+                                '[{"trait_type":"Breed","value":"',
+                                breed,
+                                '"},{"trait_type":"Foreground","value":"',
+                                foreground(_tokenId),
+                                '"},{"trait_type":"Background","value":"',
+                                background(_tokenId),
+                                '"},{"trait_type":"Generation","value":"',
+                                Strings.toString(generations[_tokenId]),
+                                '"}]'
+                            ),
+                            '}'
                         )
                     )
                 )
@@ -296,12 +301,34 @@ contract DuckDuckGoose is Ownable, ERC721 {
     }
 
     /**
-     * Color from token id.
+     * Background color from token id.
      */
-    function color(uint256 _tokenId) internal pure returns(string memory) {
-        uint red = _tokenId % 100 + 155;
-        uint green = _tokenId % 10 * 10 + 155;
-        uint blue = _tokenId % 3 * 30 + 155;
+    function background(uint256 _tokenId) internal pure returns(string memory) {
+        uint red = (_tokenId % 150) + 55;
+        uint green = ((_tokenId % 7) * 18) + 79;
+        uint blue = ((_tokenId % 3) * 40) + 85;
+        return string(abi.encodePacked(
+            'rgb(',Strings.toString(red),',',Strings.toString(green),',',Strings.toString(blue),')'
+        ));
+    }
+
+    /**
+     * Foreground color from token id.
+     */
+    function foreground(uint256 _tokenId) internal view returns(string memory) {
+        uint red = (_tokenId % 45) + 175;
+        uint green = 255 - ((_tokenId % 5) * 6);
+        uint blue = 255;
+        if(items[_tokenId] == itemType.duck) {
+            red = (_tokenId % 25) + 230;
+            green = 255 - ((_tokenId % 5) * 6);
+            blue = 66;
+        }
+        if(items[_tokenId] == itemType.goose) {
+            red = ((_tokenId % 8) * 3) + 231;
+            green = (_tokenId % 25) + 230;
+            blue = 255 - ((_tokenId % 5) * 5);
+        }
         return string(abi.encodePacked(
             'rgb(',Strings.toString(red),',',Strings.toString(green),',',Strings.toString(blue),')'
         ));
@@ -310,13 +337,11 @@ contract DuckDuckGoose is Ownable, ERC721 {
     /**
      * Make SVG
      */
-    function svg(uint256 _tokenId) internal pure returns(string memory) {
+    function svg(uint256 _tokenId) internal view returns(string memory) {
         return string(abi.encodePacked(
-            '<?xml version="1.0" encoding="UTF-8"?>',
-            '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
-            '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 2400 2400" style="stroke-width:0;background:',
-            color(_tokenId),
-            ';margin: auto;height: -webkit-fill-available">',
+            '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="350" height="350" viewBox="0 0 350 350">',
+            '<rect width="100%" height="100%" fill="',background(_tokenId),'"/>',
+            '<circle cx="175" cy="175" r="100" fill="',foreground(_tokenId),'"/>',
             '</svg>'
         ));
     }
