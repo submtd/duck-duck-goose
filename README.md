@@ -2,7 +2,7 @@
 **Play the classic game of Duck, Duck, Goose on the blockchain. Hatch a goose and win a prize!**
 
 ## Overview
-All ***Duck, Duck, Goose!*** NFT mints start out life as an egg. When enough eggs are minted, they all hatch, revealing **one goose** and a bunch of ducks! The lucky parent of the gets rewarded with a special prize, and then the cycle starts all over again.
+All ***Duck, Duck, Goose!*** NFT mints start out life as an egg. When enough eggs are minted, they all hatch, revealing **one goose** and a bunch of ducks! The lucky parent of the goose gets rewarded with a special prize, and then the cycle starts all over again.
 
 These eggs, ducks, and geese exist entirely on the blockchain and have programmatically assigned attributes such as background, foreground, breed, and generation. While they're all pretty similar, each ***Duck, Duck, Goose!*** NFT is extremely rare!
 
