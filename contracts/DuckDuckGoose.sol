@@ -83,6 +83,12 @@ contract DuckDuckGoose is Ownable, ERC721 {
     uint256 public prizeBank = 0;
 
     /**
+     * Prize value awarded.
+     * @dev this shows how much prize value has been given away.
+     */
+    uint256 public prizeValue = 0;
+
+    /**
      * Owner bank.
      * @dev this amount goes to the contract owner when a goose is hatched.
      */
@@ -168,6 +174,8 @@ contract DuckDuckGoose is Ownable, ERC721 {
         payable(gooseOwner).transfer(prizeBank);
         // tell the world we have a new goose.
         emit GooseHatched(hatchedGoose, gooseOwner, prizeBank);
+        // update prize value
+        prizeValue += prizeBank;
         // pay the contract owner some rent.
         payable(owner()).transfer(_ownerBank);
         // reset banks.
