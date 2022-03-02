@@ -20,4 +20,4 @@ Gas prices are way too high! We've worked hard to optimize the ***Duck, Duck, Go
 Maybe a cheaper version on a cheaper blockchain??
 
 #### Links
-[Discord](https://discord.duckduckgoose.club)
+* [Discord](https://discord.duckduckgoose.club)
