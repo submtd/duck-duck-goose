@@ -1,0 +1,30 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// Custom Styles
+// Hide not ready vue stuff
+[v-cloak] > * { display: none; }
+
+html {
+    font-size: 1.2rem;
+    line-height: 2rem;
+}
+
+// Header image container
+.header-container {
+    background: url('/images/banner.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 400px;
+}
+
+// Headings
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Press Start 2P';
+}
