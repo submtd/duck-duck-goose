@@ -2,10 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+Route::get('/', static function () {
     return view('mint');
 });
 
-Route::get('discord', function () {
+Route::get('getmatic', static function () {
+    return view('getmatic');
+});
+
+Route::get('discord', static function () {
     return response()->redirectTo('https://discord.gg/PN4KuTNRCv');
 });

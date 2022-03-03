@@ -19,3 +19,16 @@ window.analytics = Analytics({
 const app = createApp({});
 app.component('mint', Mint);
 app.mount('#app');
+
+document.addEventListener('DOMContentLoaded', function () {
+    window.addEventListener('scroll', function () {
+        if(window.scrollY > 400) {
+            this.document.getElementById('navbar').classList.add('fixed-top');
+            navbar_height = document.querySelector('.navbar').offsetHeight;
+            this.document.body.style.paddingTop = navbar_height + 'px';
+        } else {
+            this.document.getElementById('navbar').classList.remove('fixed-top');
+            this.document.body.style.paddingTop = '0';
+        }
+    });
+})
