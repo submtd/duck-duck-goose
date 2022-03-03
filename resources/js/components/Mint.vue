@@ -126,8 +126,8 @@
                 this.txid = null;
                 this.alert = 'Waiting on response from wallet';
                 try {
-                    const estimatedGas = await this.contract.methods.mint(this.quantity).estimateGas({ from: this.account, value: this.price * this.quantity, gas: gas });
-                    const result = await this.contract.methods.mint(this.quantity).send({ value: this.price * this.quantity, from: this.account, gas: estimatedGas });
+                    //const estimatedGas = await this.contract.methods.mint(this.quantity).estimateGas({ from: this.account, value: this.price * this.quantity, gas: gas });
+                    const result = await this.contract.methods.mint(this.quantity).send({ value: this.price * this.quantity, from: this.account });
                     this.txid = result.transactionHash;
                     this.alert = null;
                     this.mint_button_disabled = false;
