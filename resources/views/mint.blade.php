@@ -11,7 +11,7 @@
         </div>
         <div class="row mt-5">
             <div class="col align-middle" style="height: 100%;">
-                <img src="/images/img1.png" alt="">
+                <img class="img-fluid" src="/images/img1.png" alt="">
             </div>
             <div class="col align-middle" style="height: 100%;">
                 <h2 class="h4 text-primary">IT ALL BEGINS HERE...</h2>
@@ -23,12 +23,12 @@
                 <p class="align-middle" style="height: 100%">All Duck, Duck, Goose! NFT mints start out life as an egg. When enough eggs are minted, they all hatch, revealing a bunch of ducks and one goose! The lucky parent of the goose gets rewarded with a special prize, and then the cycle starts all over again.</p>
             </div>
             <div class="col align-middle text-end" style="height: 100%;">
-                <img src="/images/img2.png" alt="">
+                <img class="img-fluid" src="/images/img2.png" alt="">
             </div>
         </div>
         <div class="row mt-5">
             <div class="col align-middle" style="height: 100%;">
-                <img src="/images/img3.png" alt="">
+                <img class="img-fluid" src="/images/img3.png" alt="">
             </div>
             <div class="col align-middle" style="height: 100%;">
                 <p class="align-middle" style="height: 100%">These eggs, ducks, and geese exist entirely on the blockchain and have programmatically assigned attributes such as background, foreground, breed, and generation. While they're all pretty similar, each Duck, Duck, Goose! NFT is extremely rare!</p>
@@ -39,13 +39,13 @@
                 <p class="align-middle" style="height: 100%">With each hatching cycle, the number of mints needed to hatch the next set of eggs gets bigger and bigger while the prize awarded to the goose holder grows as well! In order to keep things fun in perpetuity, whenever the hatch cycle grows to a certain size, it resets back to the beginning and we can start all over again!</p>
             </div>
             <div class="col align-middle text-end" style="height: 100%;">
-                <img src="/images/img4.gif" alt="">
+                <img class="img-fluid" src="/images/img4.gif" alt="">
             </div>
         </div>
         <h2 class="text-primary mt-5 text-center">DUCK, DUCK, GOOSE! IS AN INEXPENSIVE WAY TO HAVE SOME FUN ON THE BLOCKCHAIN!</h2>
         <div class="row mt-5">
             <div class="col align-middle" style="height: 100%;">
-                <img src="/images/img5.png" alt="">
+                <img class="img-fluid" src="/images/img5.png" alt="">
             </div>
             <div class="col align-middle" style="height: 100%;">
                 <h2 class="h4 text-success">THE HATCHING CYCLE</h2>
@@ -57,7 +57,7 @@
                 <p class="align-middle" style="height: 100%">Gas prices are way too high! We've worked hard to optimize the Duck, Duck, Goose! smart contract to be as gas efficient as possible in order to keep those mint prices down. In addition, we've set the minting price to <strong>ONLY 1 MATIC</strong>!</p>
             </div>
             <div class="col align-middle text-end" style="height: 100%;">
-                <img src="/images/img6.png" alt="">
+                <img class="img-fluid" src="/images/img6.png" alt="">
             </div>
         </div>
     </div>
