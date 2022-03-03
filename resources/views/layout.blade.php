@@ -11,13 +11,12 @@
     <body>
         <div class="container-fluid header-container"></div>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="navbar">
-            <div class="container">
-                <a class="navbar-brand" href="/">Duck, Duck, Goose!</a>
+            <div class="container text-center">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <div class="collapse navbar-collapse d-flex justify-content-center" id="navbar">
+                    <ul class="navbar-nav mb-2 mb-lg-0 d-flex justify-content-center">
                         <li class="nav-item">
                             <a class="nav-link" href="/">Mint</a>
                         </li>
