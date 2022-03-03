@@ -82,7 +82,7 @@
         methods: {
             async connect() {
                 this.alert = 'Waiting on response from wallet';
-                analytics.track('clickedConnectWalletButton');
+                window.analytics.track('clickedConnectWalletButton');
                 try {
                     if(typeof window.ethereum == 'undefined') {
                         window.location.href = 'https://metamask.app.link/dapp/duckduckgoose.club';
@@ -102,9 +102,9 @@
                     this.alert = null;
                     this.connected = true;
                     this.getData();
-                    analytics.track('connectedWallet');
+                    window.analytics.track('connectedWallet');
                 } catch(error) {
-                    analytics.track('connectWalletFailed', {
+                    window.analytics.track('connectWalletFailed', {
                         message: error.message,
                     });
                     this.alert = error.message;
@@ -124,14 +124,14 @@
                 }
             },
             async mint() {
-                analytics.track('clickedMintButton');
+                window.analytics.track('clickedMintButton');
                 this.mint_button_disabled = true;
                 this.txid = null;
                 this.alert = 'Waiting on response from wallet';
                 try {
                     const result = await this.contract.methods.mint(this.quantity).send({ value: this.price * this.quantity, from: this.account });
                     this.txid = result.transactionHash;
-                    analytics.track('purchase', {
+                    window.analytics.track('purchase', {
                         item: this.quantity,
                         value: this.totalCost,
                     });
@@ -139,7 +139,7 @@
                     this.mint_button_disabled = false;
                     this.getData();
                 } catch(error) {
-                    analytics.track('mintFailed', {
+                    window.analytics.track('mintFailed', {
                         message: error.message,
                     });
                     this.alert = error.message;
