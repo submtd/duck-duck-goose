@@ -31,19 +31,29 @@ task("balances", "Prints the list of account balances", async () => {
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
+const accounts = process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [];
+
 module.exports = {
   networks: {
     rinkeby: {
       url: process.env.RINKEBY_RPC_URL || '',
-      accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
+      accounts: accounts,
     },
     mainnet: {
       url: process.env.MAINNET_RPC_URL || '',
-      accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
+      accounts: accounts,
+    },
+    polygon: {
+        url: process.env.POLYGON_RPC_URL || '',
+        accounts: accounts,
     },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY
+    apiKey: {
+        mainnet: process.env.ETHERSCAN_API_KEY,
+        rinkeby: process.env.ETHERSCAN_API_KEY,
+        polygon: process.env.POLYGONSCAN_API_KEY,
+    },
   },
   gasReporter: {
     enabled: true,
@@ -56,7 +66,7 @@ module.exports = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 5000,
+        runs: 200,
       },
     },
   },

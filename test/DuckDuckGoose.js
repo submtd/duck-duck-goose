@@ -1,20 +1,31 @@
 const { expect } = require("chai");
-const { BigNumber } = require("ethers");
 const { ethers } = require("hardhat");
 
 const hatchCycleMinimum = 5;
 const hatchCycleMaximum = 500;
 const goosePrizePercentage = 90;
-const price = '1000000000000000';
+const price = '1000000000000000000';
 const name = 'Duck, Duck, Goose!';
 const symbol = '$DDG';
 
 describe("DuckDuckGoose", function () {
     // RUN THIS BEFORE EACH TEST
     beforeEach(async function () {
-        NFT = await ethers.getContractFactory("DuckDuckGoose");
-        nft = await NFT.deploy();
         [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
+        const Egg = await hre.ethers.getContractFactory("Egg");
+        const egg = await Egg.deploy();
+        const Duck = await hre.ethers.getContractFactory("Duck");
+        const duck = await Duck.deploy();
+        const Goose = await hre.ethers.getContractFactory("Goose");
+        const goose = await Goose.deploy();
+        const NFT = await ethers.getContractFactory("DuckDuckGoose", {
+            libraries: {
+                Egg: egg.address,
+                Duck: duck.address,
+                Goose: goose.address,
+            },
+        });
+        nft = await NFT.deploy();
     });
     // TESTS
     describe("Deployment", function () {

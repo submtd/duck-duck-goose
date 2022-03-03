@@ -5,6 +5,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "./Egg.sol";
+import "./Duck.sol";
+import "./Goose.sol";
 
 contract DuckDuckGoose is Ownable, ERC721 {
     /**
@@ -74,7 +77,7 @@ contract DuckDuckGoose is Ownable, ERC721 {
      * Price.
      * @dev this is how much each NFT costs to mint.
      */
-    uint256 public price = 1000000000000000;
+    uint256 public price = 1000000000000000000;
 
     /**
      * Prize bank.
@@ -103,7 +106,9 @@ contract DuckDuckGoose is Ownable, ERC721 {
     /**
      * Constructor.
      */
-    constructor() ERC721('Duck, Duck, Goose!', '$DDG') {}
+    constructor()
+        ERC721('Duck, Duck, Goose!', '$DDG')
+        {}
 
     /**
      * Goose hatched event.
@@ -267,11 +272,16 @@ contract DuckDuckGoose is Ownable, ERC721 {
     function tokenURI(uint256 _tokenId) public view override returns (string memory) {
         require(_tokenId > 0 && _tokenId <= _tokenIdTracker, 'Token does not exist');
         string memory breed = 'Egg';
+        string memory _background = background(_tokenId);
+        string memory _foreground = foreground(_tokenId);
+        string memory image = Egg.make(_background, _foreground);
         if(items[_tokenId] == itemType.duck) {
             breed = 'Duck';
+            image = Duck.make(_background, _foreground);
         }
         if(items[_tokenId] == itemType.goose) {
             breed = 'Goose';
+            image = Goose.make(_background, _foreground);
         }
         return string(
             abi.encodePacked(
@@ -286,16 +296,16 @@ contract DuckDuckGoose is Ownable, ERC721 {
                             '","seller_fee_basis_points":"1000","image":"',
                             //svg(_tokenId),
                             'data:image/svg+xml;base64,',
-                            Base64.encode(bytes(svg(_tokenId))),
+                            Base64.encode(bytes(image)),
                             //image,
                             '","attributes":',
                             abi.encodePacked(
                                 '[{"trait_type":"Breed","value":"',
                                 breed,
                                 '"},{"trait_type":"Foreground","value":"',
-                                foreground(_tokenId),
+                                _foreground,
                                 '"},{"trait_type":"Background","value":"',
-                                background(_tokenId),
+                                _background,
                                 '"},{"trait_type":"Generation","value":"',
                                 Strings.toString(generations[_tokenId]),
                                 '"}]'
@@ -312,9 +322,9 @@ contract DuckDuckGoose is Ownable, ERC721 {
      * Background color from token id.
      */
     function background(uint256 _tokenId) internal pure returns(string memory) {
-        uint red = (_tokenId % 150) + 55;
-        uint green = ((_tokenId % 7) * 18) + 79;
-        uint blue = ((_tokenId % 3) * 40) + 85;
+        uint red = _tokenId % 255;
+        uint green = (_tokenId % 10) * 25;
+        uint blue = 255 - ((_tokenId % 85) * 3);
         return string(abi.encodePacked(
             'rgb(',Strings.toString(red),',',Strings.toString(green),',',Strings.toString(blue),')'
         ));
@@ -324,33 +334,21 @@ contract DuckDuckGoose is Ownable, ERC721 {
      * Foreground color from token id.
      */
     function foreground(uint256 _tokenId) internal view returns(string memory) {
-        uint red = (_tokenId % 45) + 175;
-        uint green = 255 - ((_tokenId % 5) * 6);
-        uint blue = 255;
+        uint red = _tokenId % 255;
+        uint green = 255 - ((_tokenId % 7) * 3);
+        uint blue = 255 - (_tokenId % 3);
         if(items[_tokenId] == itemType.duck) {
-            red = (_tokenId % 25) + 230;
-            green = 255 - ((_tokenId % 5) * 6);
-            blue = 66;
+            red = 255 - (_tokenId % 12);
+            green = 255 - ((_tokenId % 2) * 30);
+            blue = 0 + (_tokenId % 11);
         }
         if(items[_tokenId] == itemType.goose) {
-            red = ((_tokenId % 8) * 3) + 231;
+            red = 255 - (_tokenId % 3);
             green = (_tokenId % 25) + 230;
-            blue = 255 - ((_tokenId % 5) * 5);
+            blue = 255 - (_tokenId % 4);
         }
         return string(abi.encodePacked(
             'rgb(',Strings.toString(red),',',Strings.toString(green),',',Strings.toString(blue),')'
-        ));
-    }
-
-    /**
-     * Make SVG
-     */
-    function svg(uint256 _tokenId) internal view returns(string memory) {
-        return string(abi.encodePacked(
-            '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="350" height="350" viewBox="0 0 350 350">',
-            '<rect width="100%" height="100%" fill="',background(_tokenId),'"/>',
-            '<circle cx="175" cy="175" r="100" fill="',foreground(_tokenId),'"/>',
-            '</svg>'
         ));
     }
 
