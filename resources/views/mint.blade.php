@@ -6,9 +6,7 @@
             <h1>DUCK, DUCK, GOOSE!</h1>
             <h1 class="text-light bg-danger h4 p-2">HATCH A GOOSE AND WIN A PRIZE!</h1>
         </div>
-        <div style="max-width: 500px; margin: 0 auto;">
-            <mint/>
-        </div>
+        <mint/>
         <div class="row mt-5">
             <div class="col-lg align-middle" style="height: 100%;">
                 <img class="img-fluid" src="/images/img1.png" alt="">

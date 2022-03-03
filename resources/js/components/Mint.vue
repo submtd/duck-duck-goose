@@ -6,31 +6,33 @@
         <div v-show="txid" class="mb-3">
             <div class="alert alert-success">Success! Transaction Hash: {{ txid }}</div>
         </div>
-        <div v-show="!connected">
-            <button @click="connect" class="btn btn-lg btn-success col-12 mb-2">Connect Your Wallet</button>
-        </div>
-        <div v-show="connected">
-            <label class="visually-hidden" for="quantity">Quantity</label>
-            <div class="input-group">
-                <input type="number" class="form-control col-2" id="quantity" min="1" v-model="quantity">
-                <button class="btn btn-lg btn-success col-10" @click="mint" :disabled="mint_button_disabled">Mint ({{ totalCost }} MATIC)</button>
+        <div style="max-width: 500px; margin: 0 auto;">
+            <div v-show="!connected">
+                <button @click="connect" class="btn btn-lg btn-success col-12 mb-2">Connect Your Wallet</button>
             </div>
-            <div class="carousel slide text-center text-secondary" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <small>The current prize for hatching a <strong class="text-success">goose</strong> is <strong class="text-dark"><i>{{ prizeBank }} MATIC</i></strong>!</small>
-                    </div>
-                    <div class="carousel-item">
-                        <small>The prize <strong class="text-dark"><i>increases with every mint</i></strong> until the <strong class="text-success">eggs</strong> are hatched!</small>
-                    </div>
-                    <div class="carousel-item">
-                        <small><strong class="text-dark"><i>{{ ducks }}</i></strong> <strong class="text-success">ducks</strong> have been hatched so far!</small>
-                    </div>
-                    <div class="carousel-item">
-                        <small><strong class="text-dark"><i>{{ geese }}</i></strong> <strong class="text-success">geese</strong> have been hatched so far!</small>
-                    </div>
-                    <div class="carousel-item">
-                        <small>only <strong class="text-dark"><i>{{ hatchCycle - eggs }}</i></strong> mints left before the next <strong class="text-success">hatch</strong>!</small>
+            <div v-show="connected">
+                <label class="visually-hidden" for="quantity">Quantity</label>
+                <div class="input-group">
+                    <input type="number" class="form-control col-2" id="quantity" min="1" v-model="quantity">
+                    <button class="btn btn-lg btn-success col-10" @click="mint" :disabled="mint_button_disabled">Mint ({{ totalCost }} MATIC)</button>
+                </div>
+                <div class="carousel slide text-center text-secondary" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <small>The current prize for hatching a <strong class="text-success">goose</strong> is <strong class="text-dark"><i>{{ prizeBank }} MATIC</i></strong>!</small>
+                        </div>
+                        <div class="carousel-item">
+                            <small>The prize <strong class="text-dark"><i>increases with every mint</i></strong> until the <strong class="text-success">eggs</strong> are hatched!</small>
+                        </div>
+                        <div class="carousel-item">
+                            <small><strong class="text-dark"><i>{{ ducks }}</i></strong> <strong class="text-success">ducks</strong> have been hatched so far!</small>
+                        </div>
+                        <div class="carousel-item">
+                            <small><strong class="text-dark"><i>{{ geese }}</i></strong> <strong class="text-success">geese</strong> have been hatched so far!</small>
+                        </div>
+                        <div class="carousel-item">
+                            <small>only <strong class="text-dark"><i>{{ hatchCycle - eggs }}</i></strong> mints left before the next <strong class="text-success">hatch</strong>!</small>
+                        </div>
                     </div>
                 </div>
             </div>
