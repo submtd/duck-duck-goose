@@ -2,10 +2,15 @@
 <html lang="en">
     <head>
         <meta charset="utf-8"/>
-        <title>Duck, Duck, Goose! - The classic game now on the blockchain!</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>@yield('title')</title>
     </head>
     <body>
-        <div class="container" id="app" style="max-width: 500px; margin: 0 auto; float: none;"></div>
-        <script src="./app.js"></script>
+        <div class="container-fluid" style="background: url('/images/banner.jpg'); background-size: cover; background-position: center; height: 400px;">
+        </div>
+        <div class="container mt-5" id="app">
+            @yield('content')
+        </div>
+        <script src="{{ mix('js/app.js') }}"></script>
     </body>
 </html>

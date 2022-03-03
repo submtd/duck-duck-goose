@@ -1,7 +1,9 @@
 import { createApp } from "vue";
-import App from "./App.vue";
+import Mint from "./components/Mint";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
-createApp(App).mount("#app");
+const app = createApp({});
+app.component('mint', Mint);
+app.mount('#app');
