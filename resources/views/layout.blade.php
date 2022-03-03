@@ -30,6 +30,9 @@
                             <a class="nav-link" href="https://polygonscan.com/address/0xdC96bD307bAf3418B3e5E0d16b03e4e2b4da0281" target="_new">Contract</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="https://opensea.io/collection/duck-duck-goose-nft" target="_new">OpenSea</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="/discord" target="_new">Discord</a>
                         </li>
                         <li class="nav-item">
