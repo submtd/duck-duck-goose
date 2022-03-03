@@ -129,7 +129,9 @@
                 this.txid = null;
                 this.alert = 'Waiting on response from wallet';
                 try {
-                    const result = await this.contract.methods.mint(this.quantity).send({ value: this.price * this.quantity, from: this.account });
+                    const gasPrice = await this.web3.eth.getGasPrice();
+                    //const estimatedGas = await this.contract.methods.mint(this.quantity).estimateGas({ value: this.price * this.quantity, from: this.account });
+                    const result = await this.contract.methods.mint(this.quantity).send({ value: this.price * this.quantity, from: this.account, gasPrice: gasPrice });
                     this.txid = result.transactionHash;
                     window.analytics.track('purchase', {
                         item: this.quantity,
