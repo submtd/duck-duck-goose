@@ -131,7 +131,7 @@
                 try {
                     const result = await this.contract.methods.mint(this.quantity).send({ value: this.price * this.quantity, from: this.account });
                     this.txid = result.transactionHash;
-                    analytics.track('mintedNFT', {
+                    analytics.track('purchase', {
                         item: this.quantity,
                         value: this.totalCost,
                     });
