@@ -38,9 +38,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="https://twitter.com/GooseHatcher" target="_new">Twitter</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://github.com/submtd/duck-duck-goose" target="_new">Github</a>
-                        </li>
                     </ul>
                 </div>
             </div>
