@@ -82,6 +82,7 @@
         methods: {
             async connect() {
                 this.alert = 'Waiting on response from wallet';
+                analytics.track('clickedConnectWalletButton');
                 try {
                     if(typeof window.ethereum == 'undefined') {
                         window.location.href = 'https://metamask.app.link/dapp/duckduckgoose.club';
@@ -101,7 +102,11 @@
                     this.alert = null;
                     this.connected = true;
                     this.getData();
+                    analytics.track('connectedWallet');
                 } catch(error) {
+                    analytics.track('connectWalletFailed', {
+                        message: error.message,
+                    });
                     this.alert = error.message;
                     return false;
                 }
@@ -119,16 +124,24 @@
                 }
             },
             async mint() {
+                analytics.track('clickedMintButton');
                 this.mint_button_disabled = true;
                 this.txid = null;
                 this.alert = 'Waiting on response from wallet';
                 try {
                     const result = await this.contract.methods.mint(this.quantity).send({ value: this.price * this.quantity, from: this.account });
                     this.txid = result.transactionHash;
+                    analytics.track('mintedNFT', {
+                        item: this.quantity,
+                        value: this.totalCost,
+                    });
                     this.alert = null;
                     this.mint_button_disabled = false;
                     this.getData();
                 } catch(error) {
+                    analytics.track('mintFailed', {
+                        message: error.message,
+                    });
                     this.alert = error.message;
                     this.mint_button_disabled = false;
                     return false;
