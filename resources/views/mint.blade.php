@@ -42,7 +42,7 @@
                 <img src="/images/img4.gif" alt="">
             </div>
         </div>
-        <h2 class="text-primary mt-5 text-center">DUCK, DUCK, GOOSE! IS A FUN AND INEXPENSIVE WAY TO HAVE SOME FUN ON THE BLOCKCHAIN!</h2>
+        <h2 class="text-primary mt-5 text-center">DUCK, DUCK, GOOSE! IS AN INEXPENSIVE WAY TO HAVE SOME FUN ON THE BLOCKCHAIN!</h2>
         <div class="row mt-5">
             <div class="col align-middle" style="height: 100%;">
                 <img src="/images/img5.png" alt="">
