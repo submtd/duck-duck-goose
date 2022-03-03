@@ -10,7 +10,6 @@ typechain
 scripts/addresses.json
 cache
 artifacts
-/public
 /storage
 /vendor
 .env.backup
@@ -20,3 +19,15 @@ Homestead.json
 Homestead.yaml
 .lando.local.yml
 /dist
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env.backup
+.phpunit.result.cache
+docker-compose.override.yml
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
+.lando.local.yml
